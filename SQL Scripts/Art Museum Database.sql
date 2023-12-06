@@ -134,13 +134,6 @@ VALUES
 ('0020', 'Anonymous', '100', 'portrait de momie ; L''Européenne', 'Portrait of a Mummy', 'Egypt', 'Roman Period', 'Masterpieces of The Louvre'),
 ('0021', 'Antoine-Louis Barye', '1832', 'Lion au serpent', 'Lion with a snake', 'France', 'Modern', 'Masterpieces of The Louvre');
 
-INSERT INTO EXHIBITION(Name, Start_date, End_date)
-VALUES
-('The Tudors: Art and Majesty in Renaissance England','October 10, 2022','January 8, 2023'),
-('Cubism and the Trompe l''Oeil Tradition','October 20, 2022','January 22, 2023'),
-('Hear Me Now: The Black Potters of Old Edgefield, South Carolina','September 9, 2022','February 5, 2023'),
-('''MNR'' Works At The Musée du Louvre',null,null),
-('Masterpieces of The Louvre',null,null);
 
 INSERT INTO PAINTING (Art_Object_Id_no, Paint_type, Drawn_on)
 VALUES
