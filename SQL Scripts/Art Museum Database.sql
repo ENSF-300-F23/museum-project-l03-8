@@ -75,8 +75,8 @@ CREATE TABLE PERMANENT_COLLECTION (
 CREATE TABLE BORROWED (
     Id_no INT PRIMARY KEY,
     Collection_from VARCHAR(255),
-    Date_borrowed DATE,
-    Date_returned DATE,
+    Date_borrowed VARCHAR(55),
+    Date_returned VARCHAR(55),
     FOREIGN KEY (Id_no) REFERENCES ART_OBJECT(Id_no)
 );
 INSERT INTO ARTIST (Name, DateBorn, Date_died, Country_of_origin, Epoch, Main_style, Description)
