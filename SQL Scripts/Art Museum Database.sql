@@ -1,3 +1,5 @@
+DROP DATABASE IF EXISTS ARTMUSEUM;
+CREATE DATABASE ARTMUSEUM;
 -- Create the ARTIST table
 CREATE TABLE ARTIST (
     Name VARCHAR(255) PRIMARY KEY,
@@ -94,15 +96,6 @@ VALUES
 ('0019', 'Anonymous', '525-550', 'Feuillet de diptyque en cinq parties : l''Empereur triomphant (Justinien?)', 'Diptych folio in five parts: the triumphant Emperor (Justinian?)', 'Constantinople', 'Middle Ages', 'Masterpieces of The Louvre'),
 ('0020', 'Anonymous', '100-150', 'portrait de momie ; L''Européenne', 'Portrait of a Mummy', 'Egypt', 'Roman Period', 'Masterpieces of The Louvre'),
 ('0021', 'Antoine-Louis Barye', '1832', 'Lion au serpent', 'Lion with a snake', 'France', 'Modern', 'Masterpieces of The Louvre');
-
--- Create the ART_OBJECT_EXHIBITION junction table
-CREATE TABLE ART_OBJECT_EXHIBITION (
-    Art_Object_Id_no INT,
-    Exhibition_id INT,
-    PRIMARY KEY (Art_Object_Id_no, Exhibition_id),
-    FOREIGN KEY (Art_Object_Id_no) REFERENCES ART_OBJECT(Id_no),
-    FOREIGN KEY (Exhibition_id) REFERENCES EXHIBITION(Name)
-);
 
 -- Create the PAINTING table
 CREATE TABLE PAINTING (
