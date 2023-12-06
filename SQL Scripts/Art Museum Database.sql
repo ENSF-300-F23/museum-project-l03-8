@@ -135,7 +135,7 @@ VALUES
 ('0021', 'Antoine-Louis Barye', '1832', 'Lion au serpent', 'Lion with a snake', 'France', 'Modern', 'Masterpieces of The Louvre');
 
 
-INSERT INTO PAINTING (Art_Object_Id_no, Paint_type, Drawn_on)
+INSERT INTO PAINTING (Id_no, Paint_type, Drawn_on)
 VALUES
 ('0001', 'Oil', 'Panel'),
 ('0002', 'Oil', 'Canvas'),
@@ -145,7 +145,7 @@ VALUES
 ('0016', null, 'Metal'),
 ('0020', 'Leaf Gliding', 'Cedar');
 
-INSERT INTO SCULPTURE (Art_Object_Id_no, Material, Height, Weight)
+INSERT INTO SCULPTURE (Id_no, Material, Height, Weight)
 VALUES
 ('0003', 'Bronze', 101, 141),
 ('0004', 'Bronze', 340, 622),
@@ -157,7 +157,7 @@ VALUES
 ('0018', 'Ceramic', 48, null),
 ('0021', 'Bronze', 135, null);
 
-INSERT INTO OTHER (Art_Object_Id_no, Type, Style)
+INSERT INTO OTHER (Id_no, Type, Style)
 VALUES
 ('0005', 'Sketch', 'Realistic'),
 ('0006', 'Text', 'Written'),
