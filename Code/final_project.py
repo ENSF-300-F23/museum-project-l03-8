@@ -40,7 +40,57 @@ def execute_sql(connection, sql, data=None):
 def execute_script(connection, script_path):
     with open(script_path, 'r') as file:
         sql_script = file.read()
-        execute_sql(connection, sql_script)
+
+    sql_commands = sql_script.split(';')
+
+    for sql_command in sql_commands:
+        sql_command = sql_command.strip()
+        if sql_command:
+            success = execute_sql(connection, sql_command)
+            if not success:
+                print(f"Execution of '{sql_command}' failed.")
+                return
+
+    print("Script executed successfully")
+
+def create_user(connection):
+    username = input("Enter new MySQL username: ")
+    password = input("Enter new MySQL password: ")
+
+    hashed_password = hash(password)
+
+    sql_command = f"CREATE USER '{username}'@'localhost' IDENTIFIED BY '{hashed_password}'"
+    result = execute_sql(connection, sql_command)
+
+    if result:
+        print(f"User '{username}' created successfully!")
+    else:
+        print("Error creating user.")
+
+def edit_user(connection):
+    username = input("Enter MySQL username to edit: ")
+    new_password = input("Enter new password: ")
+
+    hashed_password = hash(new_password)
+
+    sql_command = f"ALTER USER '{username}'@'localhost' IDENTIFIED BY '{hashed_password}'"
+    result = execute_sql(connection, sql_command)
+
+    if result:
+        print(f"Password for user '{username}' updated successfully!")
+    else:
+        print("Error updating password.")
+
+def block_user(connection):
+    username = input("Enter MySQL username to block: ")
+
+    sql_command = f"DROP USER '{username}'@'localhost'"
+    result = execute_sql(connection, sql_command)
+
+    if result:
+        print(f"User '{username}' blocked successfully!")
+    else:
+        print("Error blocking user.")
 
 def admin_interface():
     connection = get_database_connection()
@@ -49,19 +99,33 @@ def admin_interface():
         print("\nAdmin Interface:")
         print("1. Execute SQL Command")
         print("2. Execute SQL Script")
-        print("3. Quit")
+        print("3. Create User")
+        print("4. Edit User Password")
+        print("5. Block User")
+        print("6. Quit")
         
-        choice = input("Enter your choice (1-3): ")
+        choice = input("Enter your choice (1-6): ")
 
         if choice == '1':
             sql_command = input("Enter SQL Command: ")
-            execute_sql(connection, sql_command)
-
+            result = execute_sql(connection, sql_command)
+            
+            if result:
+                print("Command Executed")
+            else:
+                print("Command Failed.")
+        
         elif choice == '2':
-            script_path = input("Enter SQL Script Path: ")
+            script_path = input("Enter SQL Script Path (without quotes): ")
             execute_script(connection, script_path)
 
         elif choice == '3':
+            create_user(connection)
+        elif choice == '4':
+            edit_user(connection)
+        elif choice == '5':
+            block_user(connection)
+        elif choice == '6':
             break
 
         else:
@@ -398,13 +462,17 @@ def guest_interface():
 
 
 if __name__ == "__main__":
-    role = input("Enter your role (admin/employee/guest): ")
+    while True:
+        role = input("Enter your role (admin/employee/guest): ")
 
-    if role == 'admin':
-        admin_interface()
-    elif role == 'employee':
-        employee_interface()
-    elif role == 'guest':
-        guest_interface()
-    else:
-        print("Invalid role.")
+        if role == 'admin':
+            admin_interface()
+            break
+        elif role == 'employee':
+            employee_interface()
+            break
+        elif role == 'guest':
+            guest_interface()
+            break
+        else:
+            print("Invalid role.")
