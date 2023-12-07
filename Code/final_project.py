@@ -1,4 +1,5 @@
 import mysql.connector
+from datetime import datetime
 
 def get_database_connection():
     user = input("Enter MySQL username: ")
@@ -14,15 +15,26 @@ def get_database_connection():
 
     return connection
 
-def execute_sql(connection, sql):
+def execute_sql(connection, sql, data=None):
     cursor = connection.cursor()
 
     try:
-        cursor.execute(sql)
-        connection.commit()
-        print("Query executed successfully.")
+        if data:
+            cursor.execute(sql, data)
+        else:
+            cursor.execute(sql)
+
+        if cursor.description:  
+            result = cursor.fetchall()
+            return result
+        else:
+            connection.commit()
+            return True
+
     except mysql.connector.Error as err:
         print(f"Error: {err}")
+        return False
+
     finally:
         cursor.close()
 
@@ -82,17 +94,163 @@ def guest_interface():
 
     while True:
         print("\nGuest Interface:")
-        print("1. Data Lookup")
-        print("2. Quit")
-        
-        choice = input("Enter your choice (1-2): ")
+        print("1. Browse Art Objects")
+        print("2. Browse Artists")
+        print("3. Browse Collections")
+        print("4. Browse Exhibitions")
+        print("5. Quit")
 
-        # Implement the operations for guest_interface
+        choice = input("Enter your choice (1-5): ")
 
-        if choice == '2':
+        if choice == "1":
+            while True:
+                id_no = input("Enter the Art Object ID number: ")
+
+                try:
+                    with connection.cursor() as cursor:
+                        cursor.execute(f"SELECT * FROM ART_OBJECT WHERE Id_no = {id_no}")
+
+                        result = cursor.fetchall()
+
+                        if result:
+                            print("\nArt Objects:")
+                            columns = [col[0] for col in cursor.description]
+                            for i, col in enumerate(columns):
+                                print(col, end="\t")  
+                            print() 
+
+                            for row in result:
+                                print(row)
+                            
+                            cursor.execute(f"SELECT * FROM PAINTING WHERE Id_no = {id_no}")
+                            result_painting = cursor.fetchall()
+
+                            cursor.execute(f"SELECT * FROM SCULPTURE WHERE Id_no = {id_no}")
+                            result_sculpture = cursor.fetchall()
+
+                            cursor.execute(f"SELECT * FROM OTHER WHERE Id_no = {id_no}")
+                            result_other = cursor.fetchall()
+
+                            if result_painting:
+                                print("\nPainting:")
+                                columns_painting = [col[0] for col in cursor.description]
+                                for i, col in enumerate(columns_painting):
+                                    print(col, end="\t")  
+                                print()
+                                for row in result_painting:
+                                    print(row)
+                            elif result_sculpture:
+                                print("\nSculpture/Statue:")
+                                columns_sculpture = [col[0] for col in cursor.description]
+                                for i, col in enumerate(columns_sculpture):
+                                    print(col, end="\t")  
+                                print()
+                                for row in result_sculpture:
+                                    print(row)
+                            elif result_other:
+                                print("\nOther:")
+                                columns_other = [col[0] for col in cursor.description]
+                                for i, col in enumerate(columns_other):
+                                    print(col, end="\t")  
+                                print()
+                                for row in result_other:
+                                    print(row)
+                            break
+
+                        else:
+                            print(f"No art object found with Id_no {id_no}")
+
+                except Exception as e:
+                    print(f"Error: {e}")
+
+        elif choice == "2":
+            while True:
+                name1 = input("Enter the name of the Artist: ")
+
+                try:
+                    with connection.cursor() as cursor:
+                        cursor.execute(f"SELECT * FROM ARTIST WHERE Name LIKE '%{name1}%'")
+
+                        result = cursor.fetchall()
+
+                        if result:
+                            print("\nArtists:")
+                            columns = [col[0] for col in cursor.description]
+                            for i, col in enumerate(columns):
+                                print(col, end="\t")  
+                            print() 
+
+                            for row in result:
+                                print(row)
+                            break
+                        else:
+                            print(f"No Artist found with name {name1}")
+
+                except Exception as e:
+                    print(f"Error: {e}")
+
+        elif choice == "3":
+            while True:
+                name2 = input('Enter the name of the Collection: ')
+
+                try:
+                    with connection.cursor() as cursor:
+                        cursor.execute(f"SELECT * FROM COLLECTION WHERE Name LIKE '%{name2}%'")
+
+                        result = cursor.fetchall()
+
+                        if result:
+                            print("\nCollection:")
+                            columns = [col[0] for col in cursor.description]
+                            for i, col in enumerate(columns):
+                                print(col, end="\t")  
+                            print() 
+
+                            for row in result:
+                                print(row)
+                            break
+                        else:
+                            print(f"No Collection found with name {name2}")
+
+                except Exception as e:
+                    print(f"Error: {e}")
+
+        elif choice == "4":
+            while True:
+                exhibit = input("Enter the name of the Exhibition: ")
+
+                try:
+                    with connection.cursor() as cursor:
+                        cursor.execute(f"SELECT * FROM EXHIBITION WHERE Name LIKE '%{exhibit}%'")
+
+                        result = cursor.fetchall()
+
+                        if result:
+                            print("\nExhibition:")
+                            columns = [col[0] for col in cursor.description]
+                            for i, col in enumerate(columns):
+                                print(col, end="\t")  
+                            print() 
+
+                            for row in result:
+                                print(row)
+                            break
+                        else:
+                            print(f"No Exhibition found with name {exhibit}")
+
+                except Exception as e:
+                    print(f"Error: {e}")
+
+        elif choice == "5":
             break
+        else:
+            print("Invalid choice. Please enter a number between 1 and 5.")
 
-    connection.close()
+    connection.close()    
+
+
+
+
 
 if __name__ == "__main__":
     role = input("Enter your role (admin/employee/guest): ")
