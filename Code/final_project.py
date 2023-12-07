@@ -1,5 +1,4 @@
 import mysql.connector
-from datetime import datetime
 
 def get_database_connection():
     user = input("Enter MySQL username: ")
@@ -82,9 +81,158 @@ def employee_interface():
         
         choice = input("Enter your choice (1-4): ")
 
-        # Implement the operations for employee_interface
+        if choice == '1':
+            lookup_choice = input("Enter lookup type (1. Art Object, 2. Artist, 3. Exhibition): ")
 
-        if choice == '4':
+            if lookup_choice == '1':
+                id_no = input("Enter Art Object ID: ")
+                sql_command = f"SELECT * FROM ART_OBJECT WHERE Id_no = {id_no}"
+                result = execute_sql(connection, sql_command)
+
+                if result:
+                    print("Art Object Information:")
+                    for row in result:
+                        print(row)
+                else:
+                    print(f"No Art Object found with ID {id_no}")
+
+            elif lookup_choice == '2':
+                artist_name = input("Enter Artist Name: ")
+                sql_command = f"SELECT * FROM ARTIST WHERE Name LIKE '%{artist_name}%'"
+                result = execute_sql(connection, sql_command)
+
+                if result:
+                    print("Artist Information:")
+                    for row in result:
+                        print(row)
+                else:
+                    print(f"No Artist found with name {artist_name}")
+
+            elif lookup_choice == '3':
+                exhibition_name = input("Enter Exhibition Name: ")
+                sql_command = f"SELECT * FROM EXHIBITION WHERE Name LIKE '%{exhibition_name}%'"
+                result = execute_sql(connection, sql_command)
+
+                if result:
+                    print("Exhibition Information:")
+                    for row in result:
+                        print(row)
+                else:
+                    print(f"No Exhibition found with name {exhibition_name}")
+
+            else:
+                print("Invalid lookup type. Please enter 1, 2, or 3.")
+        
+        elif choice == '2':
+            print()
+            print("Insert New Tuple:")
+            print("1. Artist")
+            print("2. Collection")
+            print("3. Exhibition")
+
+            choice = input("Enter your choice (1-3): ")
+
+            if choice == '1':
+                artist_name = input("Enter Artist Name: ")
+                date_born = input("Enter Date Born (YYYY-MM-DD): ")
+                date_died = input("Enter Date Died (YYYY-MM-DD): ")
+                country_of_origin = input("Enter Country of Origin: ")
+                epoch = input("Enter Epoch: ")
+                main_style = input("Enter Main Style: ")
+                description = input("Enter Description: ")
+
+                sql_command = f"INSERT INTO ARTIST (Name, DateBorn, Date_died, Country_of_origin, Epoch, Main_style, Description) " \
+                            f"VALUES ('{artist_name}', '{date_born}', '{date_died}', '{country_of_origin}', '{epoch}', '{main_style}', '{description}')"
+
+                result = execute_sql(connection, sql_command)
+
+                if result:
+                    print("Tuple inserted successfully!")
+                else:
+                    print("Error inserting tuple.")
+
+            elif choice == '2':
+                collection_name = input("Enter Collection Name: ")
+                collection_type = input("Enter Collection Type: ")
+                collection_descr = input("Enter Collection Description: ")
+                Collection_add = input("Enter Collection address: ")
+                collection_phone = input("Enter Collection Phone Number (xxx-xxx-xxxx): ")
+                collection_contact = input("Enter Collection Contact person: ")
+
+                sql_command = f"INSERT INTO COLLECTION (Name, Type, Description, Address, Phone, Contact_person) " \
+                            f"VALUES ('{collection_name}', '{collection_type}', '{collection_descr}', '{Collection_add}', '{collection_phone}', '{collection_contact}')"
+
+                result = execute_sql(connection, sql_command)
+
+                if result:
+                    print("Tuple inserted successfully!")
+                else:
+                    print("Error inserting tuple.")
+    
+
+            elif choice == '3':
+                exhibit_name = input("Enter Exhibition Name: ")
+                start_date = input("Enter Start Date (YYYY-MM-DD): ")
+                end_date_input = input("Enter End Date (YYYY-MM-DD) or 'NULL' for ongoing: ")
+                end_date = f"NULL" if end_date_input.upper() == 'NULL' else f"'{end_date_input}'"
+
+                sql_command = f"INSERT INTO EXHIBITION (Name, Start_date, End_date) " \
+                  f"VALUES ('{exhibit_name}', '{start_date}', '{end_date}')"
+
+                result = execute_sql(connection, sql_command)
+
+                if result:
+                    print("Tuple inserted successfully!")
+                else:
+                    print("Error inserting tuple.")
+            
+        elif choice == '3':
+            print()
+            print("Update and Delete Tuple:")
+            print("1. Update Tuple")
+            print("2. Delete Tuple")
+            print("3. Back to Main Menu")
+
+            sub_choice = input("Enter your choice (1-3): ")
+
+            if sub_choice == '1':
+          
+                table_name = input("Enter the table name: ")
+                condition_column = input("Enter the reference column: ")
+                condition_value = input("Enter the reference column value: ")
+                column_name = input("Enter the column name to update: ")
+                new_value = input("Enter the new value: ")
+                
+
+                sql_command = f"UPDATE {table_name} SET {column_name} = '{new_value}' WHERE {condition_column} = '{condition_value}'"
+                result = execute_sql(connection, sql_command)
+
+                if result:
+                    print("Tuple updated successfully!")
+                else:
+                    print("Error updating tuple.")
+
+            elif sub_choice == '2':
+                
+                table_name = input("Enter the table name: ")
+                condition_column = input("Enter the condition column: ")
+                condition_value = input("Enter the condition value: ")
+
+                sql_command = f"DELETE FROM {table_name} WHERE {condition_column} = '{condition_value}'"
+                result = execute_sql(connection, sql_command)
+
+                if result:
+                    print("Tuple deleted successfully!")
+                else:
+                    print("Error deleting tuple.")
+
+            elif sub_choice == '3':
+                break  
+
+            else:
+                print("Invalid choice. Please enter a number from 1 to 3.")
+
+        elif choice == '4':
             break
 
     connection.close()
@@ -247,9 +395,6 @@ def guest_interface():
             print("Invalid choice. Please enter a number between 1 and 5.")
 
     connection.close()    
-
-
-
 
 
 if __name__ == "__main__":
